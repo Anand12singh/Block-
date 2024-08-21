@@ -2,13 +2,13 @@ import 'package:blockprec/bloc/Todo/bloc/to_do_bloc.dart';
 import 'package:blockprec/bloc/counter/counter_bloc.dart';
 import 'package:blockprec/bloc/imageupload/image_picker_block.dart';
 import 'package:blockprec/bloc/switch/bloc/switch_bloc.dart';
-import 'package:blockprec/ui/Htmls/html_screen.dart';
-import 'package:blockprec/ui/Htmls/payment.dart';
 import 'package:blockprec/utils/image_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'bloc/favourite/bloc/favourite_bloc.dart';
+import 'bloc/post/bloc/bloc/post_bloc.dart';
 import 'repositry/favourit_repo.dart';
+import 'ui/Postscreen/post_screen.dart';
 import 'ui/favourit/favourit_screen.dart';
 
 void main() {
@@ -38,7 +38,8 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => FavouriteBloc(FavouritRepo()),
-        )
+        ),
+        BlocProvider(create: (context) => PostBloc()),
       ],
       child: MaterialApp(
           title: 'bloc practice',
@@ -49,8 +50,9 @@ class MyApp extends StatelessWidget {
             // colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
             useMaterial3: false,
           ),
-          home: 
-          FavouritScreen()
+          home: PostScreen()
+       
+          // FavouritScreen()
           // ToDoScreen()
           // HtmlScreen()
           // ImagePickerScreen()
