@@ -1,5 +1,3 @@
-// ignore_for_file: unnecessary_string_interpolations, avoid_print
-
 import 'package:blockprec/utils/enums.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -15,13 +13,19 @@ class PostScreen extends StatefulWidget {
 }
 
 class _PostScreenState extends State<PostScreen> {
+  final TextEditingController _searchController = TextEditingController();
+
   @override
   void initState() {
     context.read<PostBloc>().add(PostFetch());
     super.initState();
   }
 
-  var values;
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +43,7 @@ class _PostScreenState extends State<PostScreen> {
               );
             case PostStatus.faillure:
               return Center(
-                child: Text(state.message ?? 'An error occurred'),
+                child: Text(state.message),
               );
             case PostStatus.success:
               return Column(
@@ -47,12 +51,22 @@ class _PostScreenState extends State<PostScreen> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: TextFormField(
-                      // controller: ,
+                      controller: _searchController,
                       decoration: InputDecoration(
-                          suffix: GestureDetector(
-                              onTap: () {}, child: Icon(Icons.close_outlined)),
-                          border: OutlineInputBorder(),
-                          hintText: 'Serach With Title'),
+                        suffixIcon: state.searchmessage.isNotEmpty
+                            ? GestureDetector(
+                                onTap: () {
+                                  _searchController.clear();
+                                  context
+                                      .read<PostBloc>()
+                                      .add(SearchItem(searchItem: ''));
+                                },
+                                child: const Icon(Icons.close_outlined),
+                              )
+                            : null,
+                        border: const OutlineInputBorder(),
+                        hintText: 'Search With Title',
+                      ),
                       onChanged: (value) {
                         context
                             .read<PostBloc>()
@@ -61,8 +75,8 @@ class _PostScreenState extends State<PostScreen> {
                       },
                     ),
                   ),
-                  Gap(10),
-                  Flexible(
+                  const Gap(10),
+                  Expanded(
                     child: state.searchmessage.isNotEmpty
                         ? Center(
                             child: Text(state.searchmessage),
